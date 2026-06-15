@@ -1,0 +1,50 @@
+// ── Closure demo: the money shot ─────────────────────────────────────────────
+// Each call to makeCounter() returns a NEW closure over its OWN `n`.
+// This demonstrates that upvalues correctly live on the heap after the
+// enclosing function returns.
+
+fn makeCounter(label) {
+    var n = 0;
+    fn tick() {
+        n = n + 1;
+        return label + ": " + str(n);
+    }
+    return tick;
+}
+
+var a = makeCounter("A");
+var b = makeCounter("B");
+
+print a();  // A: 1
+print a();  // A: 2
+print b();  // B: 1   <- independent from a
+print a();  // A: 3
+print b();  // B: 2
+
+// ── Adder factory ─────────────────────────────────────────────────────────────
+fn makeAdder(x) {
+    fn adder(y) { return x + y; }
+    return adder;
+}
+
+var add5  = makeAdder(5);
+var add10 = makeAdder(10);
+
+print add5(3);   // 8
+print add10(3);  // 13
+print add5(add10(2));  // 17  (composed)
+
+// ── Accumulator ──────────────────────────────────────────────────────────────
+fn makeAccum() {
+    var total = 0;
+    fn add(n) {
+        total = total + n;
+        return total;
+    }
+    return add;
+}
+
+var acc = makeAccum();
+print acc(10);  // 10
+print acc(20);  // 30
+print acc(5);   // 35

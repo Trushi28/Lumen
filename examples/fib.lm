@@ -1,0 +1,14 @@
+// Recursive Fibonacci — classic VM benchmark
+// Compare against Python: python3 -c "def f(n): return n if n<=1 else f(n-1)+f(n-2); print(f(35))"
+
+fn fib(n) {
+    if (n <= 1) return n;
+    return fib(n - 1) + fib(n - 2);
+}
+
+var start = clock();
+var result = fib(30);
+var elapsed = clock() - start;
+
+print "fib(30) = " + str(result);
+print "Time: " + str(elapsed) + "s";
